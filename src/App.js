@@ -5,7 +5,7 @@ import PrintReceipt from './components/PrintReceipt';
 function App() {
   return (
     <div>
-      <PrintReceipt> </PrintReceipt>
+      <PrintReceipt></PrintReceipt>
     </div>
   );
 }

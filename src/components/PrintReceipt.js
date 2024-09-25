@@ -1,26 +1,30 @@
-import { render } from "react-thermal-printer";
-import UserReceipt from "./UserReceipt";
+import React, { useRef } from 'react';
+import { useReactToPrint } from "react-to-print";
 
-const PrintReceipt = ({ items }) => {
-  const onClickPrintHandler = async () => {
-    const data = await render(UserReceipt({ items }));
-    console.log(data);
-    const port = await window.navigator.serial.requestPort();
-    await port.open({ baudRate: 115200 });
-    const writer = port.writable?.getWriter();
-    if (writer !== null) {
-      await writer.write(data);
-      await writer.releaseLock();
-    }
-    await port.close({ baudRate: 115200 });
-  };
-
+const MyComponent = () => {
   return (
     <div>
-      <button onClick={onClickPrintHandler}> 주문하기 </button>
-      {/* <button onClick={onClickPrintHandler}> 주문하기 </button> */}
+      <h1>프린트할 내용</h1>
+      <p>이 텍스트가 인쇄됩니다.</p>
     </div>
   );
 };
 
-export default PrintReceipt;
+const PrintPage = () => {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  return (
+    <div>
+      <button onClick={handlePrint}>프린트</button>
+      {/* 프린트할 컴포넌트 */}
+      <div style={{ display: 'none' }}>
+        <MyComponent ref={componentRef} />
+      </div>
+    </div>
+  );
+};
+
+export default PrintPage;
